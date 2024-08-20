@@ -33,10 +33,15 @@ def main():
                             item.get('display_name', '')))
         return 0
     for item in items:
-        if item.get('name','') == name:
+        if item.get('name', '') == name:
             key = item.get('key')
             otp = mintotp.totp(key)
+            import time
+            time_step = 30
+            time_remaining = int(time_step - time.time() % time_step)
+            plural = '' if time_remaining == 1 else 's'
             print(f'{name}: {otp}')
+            print(f'Good for {time_remaining} second{plural}.')
             return
     print(f'No entry found named "{name}"')
     sys.exit(1)
