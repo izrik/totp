@@ -17,6 +17,7 @@ def main():
     parser.add_argument(
         '--config', '-c', default=f'{HOME}/.config/totp.yaml',
         help='Path to the config file. Defaults to "~/.config/totp.yaml".')
+    parser.add_argument('-n', action='store_true')
     args = parser.parse_args()
     config_path = args.config
     with open(config_path) as f:
@@ -40,8 +41,13 @@ def main():
             time_step = 30
             time_remaining = int(time_step - time.time() % time_step)
             plural = '' if time_remaining == 1 else 's'
-            print(f'{name}: {otp}')
-            print(f'Good for {time_remaining} second{plural}.')
+            if args.n:
+                print(f'{name}: ', file=sys.stderr)
+                print(str(otp))
+                print(f'Good for {time_remaining} second{plural}.', file=sys.stderr)
+            else:
+                print(f'{name}: {otp}')
+                print(f'Good for {time_remaining} second{plural}.')
             return
     print(f'No entry found named "{name}"')
     sys.exit(1)
